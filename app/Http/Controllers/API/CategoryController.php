@@ -43,4 +43,10 @@ class CategoryController extends Controller
 
         return response()->json($category, 200, ["Charset" => "utf-8"]);
     }
+
+    function delete($id){
+        Categories::destroy($id);
+
+        return response()->json('Successfully deleted!', 200, ["Charset" => "utf-8"]);
+    }
 }
