@@ -103,6 +103,70 @@ class CategoryController extends Controller
         return response()->json($category, 200, ["Charset" => "utf-8"]);
     }
 
+     /**
+     * @OA\Post(
+     *     tags={"Category"},
+     *     path="/api/categories/edit/{id}",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the category",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="number",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 required={"name"},
+     *                 @OA\Property(
+     *                     property="image",
+     *                     type="file"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="name",
+     *                     type="string"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Edit Category.")
+     * )
+     */
+    public function edit($id, Request $request) {
+        $category = Categories::findOrFail($id);
+
+        $imageName=$category->image;
+        $inputs = $request->all();
+
+        if($request->hasFile("image")) {
+            $image = $request->file("image");
+            $imageName = uniqid() . ".webp";
+            $sizes = [50, 150, 300, 600, 1200];
+            // create image manager with desired driver
+            $manager = new ImageManager(new Driver());
+            foreach ($sizes as $size) {
+                $fileSave = $size . "_" . $imageName;
+                $imageRead = $manager->read($image);
+                $imageRead->scale(width: $size);
+                $path = public_path('upload/' . $fileSave);
+                $imageRead->toWebp()->save($path);
+                $removeImage = public_path('upload/'.$size."_". $category->image);
+                if(file_exists($removeImage))
+                    unlink($removeImage);
+            }
+        }
+
+        $inputs["image"]= $imageName;
+        $category->update($inputs);
+        
+        return response()->json($category,200,
+            ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
+    }
+
     /**
      * @OA\Delete(
      *     path="/api/categories/{id}",
