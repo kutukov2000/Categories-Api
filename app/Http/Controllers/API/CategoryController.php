@@ -105,25 +105,45 @@ class CategoryController extends Controller
 
     /**
      * @OA\Delete(
-     *     tags={"Category"},
      *     path="/api/categories/{id}",
-     *     @OA\Response(response="200", description="Delete Category."),
+     *     tags={"Category"},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
+     *         description="ID of the category",
      *         required=true,
-     *         description="ID of the category to delete",
      *         @OA\Schema(
-     *             type="integer",
+     *             type="number",
      *             format="int64"
      *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfully delete category"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Category not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Non authorized"
      *     )
      * )
      */
     function delete($id)
     {
-        Categories::destroy($id);
+        $category = Categories::findOrFail($id);
 
-        return response()->json('Successfully deleted!', 200, ["Charset" => "utf-8"]);
+        $sizes = [50,150,300,600,1200];
+        foreach ($sizes as $size) {
+            $fileSave = $size."_".$category->image;
+            $path=public_path('upload/'.$fileSave);
+            if(file_exists($path))
+                unlink($path);
+        }
+
+        $category->delete();
+        return response()->json("",200, ['Charset' => 'utf-8']);
     }
 }

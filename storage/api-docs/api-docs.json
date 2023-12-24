@@ -107,17 +107,23 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID of the category to delete",
+                        "description": "ID of the category",
                         "required": true,
                         "schema": {
-                            "type": "integer",
+                            "type": "number",
                             "format": "int64"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Delete Category."
+                        "description": "Successfully delete category"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    },
+                    "401": {
+                        "description": "Non authorized"
                     }
                 }
             }
