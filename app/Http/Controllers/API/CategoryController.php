@@ -23,6 +23,35 @@ class CategoryController extends Controller
         return response()->json($list, 200, ['Charset' => 'utf-8']);
     }
 
+        /**
+     * @OA\Get(
+     *     tags={"Category"},
+     *     path="/api/categories/{id}",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the category",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="number",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="List Categories."),
+     * @OA\Response(
+     *    response=404,
+     *    description="Wrong id",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Sorry, wrong Category Id has been sent. Pls try another one.")
+     *        )
+     *     )
+     * )
+     */
+    public function getById($id) {
+        $category = Categories::findOrFail($id);
+        return response()->json($category,200, ['Charset' => 'utf-8']);
+    }
+
     /**
      * @OA\Post(
      *     tags={"Category"},
