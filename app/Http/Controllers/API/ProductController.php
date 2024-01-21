@@ -21,8 +21,11 @@ class ProductController extends Controller
      */
     function getAll()
     {
-        $list = Product::all();
-        return response()->json($list, 200, ['Charset' => 'utf-8']);
+        $list = Product::with('category')
+            ->with("product_images")
+            ->get();
+        return response()->json($list)
+            ->header('Content-Type', 'application/json; charset=utf-8');
     }
     /**
      * @OA\Post(
