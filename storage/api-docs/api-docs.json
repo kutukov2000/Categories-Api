@@ -320,6 +320,17 @@
             }
         },
         "/api/products": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "operationId": "3637f35848da061c7f957a8525b37339",
+                "responses": {
+                    "200": {
+                        "description": "Products list."
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "Product"

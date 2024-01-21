@@ -30,4 +30,5 @@ Route::delete('categories/{id}', [CategoryController::class, 'delete']);
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
-Route::post('products',[ProductController::class,'create']);
+Route::get('products', [ProductController::class, 'getAll']);
+Route::post('products', [ProductController::class, 'create']);
