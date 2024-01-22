@@ -383,6 +383,34 @@
                     }
                 }
             }
+        },
+        "/api/products/{id}": {
+            "delete": {
+                "tags": [
+                    "Product"
+                ],
+                "operationId": "ea1153b10b6ae60a0495da0bd3a651f4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the product",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully delete product"
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                }
+            }
         }
     }
 }

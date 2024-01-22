@@ -115,4 +115,54 @@ class ProductController extends Controller
             'Charset' => 'utf-8'
         ], JSON_UNESCAPED_UNICODE);
     }
+
+     /**
+     * @OA\Delete(
+     *     path="/api/products/{id}",
+     *     tags={"Product"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the product",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="number",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfully delete product"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Product not found"
+     *     )
+     * )
+     */
+    public function delete($id)
+    {
+        $product = Product::findOrFail($id);
+
+        if (!$product) {
+            return response()->json(['error' => 'Product not found'], 404);
+        }
+
+        $product_images = $product->product_images;
+
+        $folderName = "upload";
+        foreach ($product_images as $image) {
+            foreach ([50, 150, 300, 600, 1200] as $size) {
+                $imagePath = public_path($folderName . '/' . $size . '_' . $image->name);
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
+            $image->delete();
+        }
+
+        $product->delete();
+
+        return response()->json(['message' => 'Product deleted successfully']);
+    }
 }
