@@ -31,6 +31,7 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
 Route::get('products', [ProductController::class, 'getAll']);
+Route::get('products/{id}', [ProductController::class, 'getById']);
 Route::post('products', [ProductController::class, 'create']);
 Route::post('products/{id}', [ProductController::class, 'edit']);
 Route::delete('products/{id}', [ProductController::class, 'delete']);

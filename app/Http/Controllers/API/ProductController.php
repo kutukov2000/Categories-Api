@@ -27,6 +27,38 @@ class ProductController extends Controller
         return response()->json($list)
             ->header('Content-Type', 'application/json; charset=utf-8');
     }
+
+    /**
+     * @OA\Get(
+     *     tags={"Product"},
+     *     path="/api/products/{id}",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the product",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="number",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Get Product by ID.")
+     * )
+     */
+    public function getById($id)
+    {
+        $product = Product::with('category')->with("product_images")->find($id);
+
+        if (!$product) {
+            return response()->json(['error' => 'Product not found'], 404);
+        }
+
+        return response()->json($product, 200, [
+            'Content-Type' => 'application/json;charset=UTF-8',
+            'Charset' => 'utf-8'
+        ], JSON_UNESCAPED_UNICODE);
+    }
+
     /**
      * @OA\Post(
      *     tags={"Product"},
@@ -115,7 +147,7 @@ class ProductController extends Controller
             'Charset' => 'utf-8'
         ], JSON_UNESCAPED_UNICODE);
     }
-    
+
     /**
      * @OA\Post(
      *     tags={"Product"},

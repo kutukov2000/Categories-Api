@@ -385,6 +385,29 @@
             }
         },
         "/api/products/{id}": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "operationId": "5419b40b4c1de9c64c8e107d66a0e3fd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the product",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get Product by ID."
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "Product"
