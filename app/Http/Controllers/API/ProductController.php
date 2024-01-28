@@ -229,16 +229,10 @@ class ProductController extends Controller
             $folderName = "upload";
             $folderPath = public_path($folderName);
 
-            foreach ($product->product_images as $image) {
-                foreach ([50, 150, 300, 600, 1200] as $size) {
-                    $imagePath = public_path($folderName . '/' . $size . '_' . $image->name);
-                    if (file_exists($imagePath)) {
-                        unlink($imagePath);
-                    }
-                }
-                $image->delete();
-            }
+            $product_images = $product->product_images;
+            $this->deteleExistedImages($product_images);
 
+            //Add new images
             $sizes = [50, 150, 300, 600, 1200];
             $images = $request->file("images");
             foreach ($images as $image) {
@@ -296,8 +290,17 @@ class ProductController extends Controller
         }
 
         $product_images = $product->product_images;
+        $this->deteleExistedImages($product_images);
 
+        $product->delete();
+
+        return response()->json(['message' => 'Product deleted successfully']);
+    }
+
+    private function deteleExistedImages($product_images)
+    {
         $folderName = "upload";
+
         foreach ($product_images as $image) {
             foreach ([50, 150, 300, 600, 1200] as $size) {
                 $imagePath = public_path($folderName . '/' . $size . '_' . $image->name);
@@ -307,9 +310,5 @@ class ProductController extends Controller
             }
             $image->delete();
         }
-
-        $product->delete();
-
-        return response()->json(['message' => 'Product deleted successfully']);
     }
 }
